@@ -2,8 +2,7 @@
 $fn = 64;
 eps = 0.1;
 render_part = "top"; // "top", "bottom"
-board_variant = "both"; // "both", "evb" (ESP32-EVB), "poe2" (ESP32-POE2)
-// With both patterns, check unused posts against underside components.
+// Both board patterns are always included. Check unused posts against underside components.
 
 case_width = 82;
 case_length = 130;
@@ -40,8 +39,6 @@ rect_post_size = 4.8;
 
 assert(render_part == "top" || render_part == "bottom",
        "render_part must be top or bottom");
-assert(board_variant == "both" || board_variant == "evb" || board_variant == "poe2",
-       "board_variant must be both, evb or poe2");
 
 module rounded_box(w, l, h, r) {
     translate([r, r, 0])
@@ -98,9 +95,7 @@ function board_holes(variant) =
             [x0 + x, esp_margin_y + y]];
 
 module board_standoffs() {
-    holes = board_variant == "both"
-        ? concat(board_holes("evb"), board_holes("poe2"))
-        : board_holes(board_variant);
+    holes = concat(board_holes("evb"), board_holes("poe2"));
     for (p = holes)
         translate([p[0], p[1], wall_thickness - eps])
             difference() {
